@@ -1,5 +1,9 @@
 const User = require("../users/users-model");
 
+const bcrypt = require("bcryptjs");
+const { tokenBuilder } = require("./auth-helpers");
+const { BCRYPT_ROUNDS } = require("../../config");
+
 const validateUser = (req, res, next) => {
   const user = req.body;
 
@@ -33,4 +37,32 @@ const checkUsernameExists = async (req, res, next) => {
   next();
 };
 
-module.exports = { validateUser, alreadyExistsInDb, checkUsernameExists };
+const validatePassword = (req, res, next) => {
+  const { password } = req.body;
+
+  const userFromDb = req.userFromDb;
+
+  if (bcrypt.compareSync(password, userFromDb.password)) {
+    req.token = tokenBuilder(userFromDb);
+    next();
+  } else next({ status: 401, message: "invalid credentials" });
+};
+
+const hashPassword = (req, res, next) => {
+  const user = req.body;
+
+  const hash = bcrypt.hashSync(user.password, BCRYPT_ROUNDS);
+
+  user.password = hash;
+
+  req.user = user;
+  next();
+};
+
+module.exports = {
+  validateUser,
+  alreadyExistsInDb,
+  checkUsernameExists,
+  validatePassword,
+  hashPassword,
+};
