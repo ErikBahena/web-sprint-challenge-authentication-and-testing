@@ -6,7 +6,7 @@ const { BCRYPT_ROUNDS } = require("../../config");
 const User = require("../users/users-model");
 const { validateUser, existsInDb } = require("./auth-middleware");
 
-router.post("/register", validateUser, existsInDb, (req, res) => {
+router.post("/register", validateUser, existsInDb, (req, res, next) => {
   const user = req.body;
 
   const hash = bcrypt.hashSync(user.password, BCRYPT_ROUNDS);
@@ -43,7 +43,7 @@ router.post("/register", validateUser, existsInDb, (req, res) => {
   */
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", (req, res, next) => {
   res.end("implement login, please!");
   /*
     IMPLEMENT
@@ -73,6 +73,7 @@ router.post("/login", (req, res) => {
 router.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     message: err.message,
+    stack: err.stack,
   });
 });
 

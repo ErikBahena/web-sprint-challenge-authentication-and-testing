@@ -1,4 +1,3 @@
-const req = require("express/lib/request");
 const User = require("../users/users-model");
 
 const validateUser = (req, res, next) => {
@@ -10,17 +9,18 @@ const validateUser = (req, res, next) => {
     !user.username ||
     user.username.trim() === ""
   ) {
-    next({ status: 400, message: "username and password required" });
+    return next({ status: 400, message: "username and password required" });
   } else next();
 };
 
 const existsInDb = async (req, res, next) => {
   const { username } = req.body;
 
-  const user = await User.getBy({ username });
+  const user = await User.getBy("username", username);
 
-  if (user) next({ status: 404, message: "username taken" });
-  else next();
+  if (!user) next();
+
+  if (user) return next({ status: 404, message: "username taken" });
 };
 
 module.exports = { validateUser, existsInDb };
