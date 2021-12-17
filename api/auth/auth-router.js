@@ -16,9 +16,7 @@ router.post(
   alreadyExistsInDb,
   hashPassword,
   (req, res, next) => {
-    const user = req.user;
-
-    User.add(user)
+    User.add(req.user)
       .then((newUser) => res.status(201).json(newUser))
       .catch(next);
     /*
@@ -55,12 +53,9 @@ router.post(
   checkUsernameExists,
   validatePassword,
   (req, res) => {
-    const token = req.token;
-    const userFromDb = req.userFromDb;
-
     res.status(200).json({
-      message: `welcome, ${userFromDb.username}`,
-      token,
+      message: `welcome, ${req.userFromDb.username}`,
+      token: req.token,
     });
 
     /*
@@ -88,12 +83,5 @@ router.post(
   */
   }
 );
-
-router.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    message: err.message,
-    stack: err.stack,
-  });
-});
 
 module.exports = router;
