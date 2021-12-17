@@ -13,14 +13,24 @@ const validateUser = (req, res, next) => {
   } else next();
 };
 
-const existsInDb = async (req, res, next) => {
+const alreadyExistsInDb = async (req, res, next) => {
   const { username } = req.body;
 
   const user = await User.getBy("username", username);
 
-  if (!user) next();
-
   if (user) return next({ status: 404, message: "username taken" });
+  else next();
 };
 
-module.exports = { validateUser, existsInDb };
+const checkUsernameExists = async (req, res, next) => {
+  const { username } = req.body;
+
+  const user = await User.getBy("username", username);
+
+  if (!user) return next({ status: 401, message: "invalid credentials" });
+
+  req.userFromDb = user;
+  next();
+};
+
+module.exports = { validateUser, alreadyExistsInDb, checkUsernameExists };

@@ -3,10 +3,10 @@ const { JWT_SECRET } = require("../../config");
 
 function tokenBuilder(user) {
   const payload = {
-    subject: user.user_id,
+    id: user.id,
     username: user.username,
-    role_name: user.role_name,
   };
+
   const options = {
     expiresIn: "1d",
   };
