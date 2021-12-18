@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`api/jokes endpoint [GET] if token is valid, responds with jokes 1`] = `
+Array [
+  Object {
+    "id": "0189hNRf2g",
+    "joke": "I'm tired of following my dreams. I'm just going to ask them where they are going and meet up with them later.",
+  },
+  Object {
+    "id": "08EQZ8EQukb",
+    "joke": "Did you hear about the guy whose whole left side was cut off? He's all right now.",
+  },
+  Object {
+    "id": "08xHQCdx5Ed",
+    "joke": "Why didn’t the skeleton cross the road? Because he had no guts.",
+  },
+]
+`;
